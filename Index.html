@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VALIANT ELEGANCE - Daily Deals</title>
+<style>
+*{box-sizing:border-box;margin:0;font-family:Arial,sans-serif}
+body{background:#f5f5f5;color:#111}
+.topbar{background:#000;color:#fff;text-align:center;padding:8px;font-size:12px}
+header{background:#fff;display:flex;justify-content:space-between;align-items:center;padding:12px 15px;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px #0001}
+.logo{font-weight:900;font-size:22px;letter-spacing:1px}.logo span{color:#d4af37}
+.search{flex:1;margin:0 12px;background:#f0f0f0;border-radius:20px;padding:9px 14px;color:#888;font-size:13px}
+.cart{background:#000;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:bold}
+.banner{background:linear-gradient(90deg,#000,#3a2a00);color:#fff;padding:28px 18px}
+.banner h1{font-size:34px;line-height:1.1}.banner h1 b{color:#ffd700}
+.banner p{margin:10px 0;color:#ddd}
+.count{background:#ffd700;color:#000;display:inline-block;padding:7px 14px;border-radius:20px;font-weight:bold;font-size:14px}
+.tabs{display:flex;gap:8px;overflow:auto;padding:14px;background:#fff;white-space:nowrap}
+.tabs div{padding:9px 16px;border-radius:20px;background:#f0f0f0;font-weight:bold;font-size:13px}
+.tabs .active{background:#000;color:#ffd700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;max-width:1100px;margin:auto}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+.card{background:#fff;border-radius:14px;overflow:hidden;position:relative;padding-bottom:12px;box-shadow:0 2px 8px #0001}
+.card img{width:100%;height:180px;object-fit:cover}
+.off{position:absolute;top:10px;left:10px;background:#ff3b30;color:#fff;padding:4px 8px;border-radius:6px;font-weight:bold;font-size:12px}
+.card h3{font-size:14px;padding:10px 10px 2px}
+.card .desc{font-size:12px;color:#888;padding:0 10px}
+.prices{padding:8px 10px}.new{font-size:18px;font-weight:900}.old{font-size:12px;color:#999;text-decoration:line-through;margin-left:5px}
+.stars{color:#ffb400;font-size:12px;padding:0 10px}
+.btn{margin:8px 10px 0;width:calc(100% - 20px);background:#000;color:#fff;border:0;padding:11px;border-radius:25px;font-weight:bold;cursor:pointer}
+.footer{background:#000;color:#fff;padding:30px 18px;text-align:center;margin-top:20px}
+.footer a{color:#ffd700;cursor:pointer}
+#loginBox,#ownerPanel{display:none;max-width:600px;margin:20px auto;background:#fff;padding:20px;border-radius:14px}
+input{width:100%;padding:12px;margin:7px 0;border-radius:8px;border:1px solid #ddd}
+button{padding:12px;border-radius:8px;border:0;font-weight:bold;cursor:pointer}
+.wa{position:fixed;bottom:18px;right:18px;background:#25D366;color:#fff;padding:14px 18px;border-radius:50px;font-weight:bold;box-shadow:0 4px 15px #0003;z-index:99}
+</style></head><body>
+<div class="topbar">VALIANT ELEGANCE • ONLINE SHOP • FREE DELIVERY IN NGONG ON ORDERS OVER KSH 5000</div>
+<header><div class="logo">VALIANT<span>ELEGANCE</span></div><div class="search">🔍 Search watches...</div><div class="cart">🛒 Cart</div></header>
+<div class="banner"><p style="color:#ffd700;font-weight:bold">✦ DAILY DEALS ✦</p><h1>Up To <b>40% OFF</b><br>Luxury Watches</h1><p>Oraimo style. Valiant quality. Order on WhatsApp.</p><div class="count" id="count">⏰ Ends in 07 : 59 : 32</div></div>
+<div class="tabs"><div class="active">All Deals</div><div>Gold</div><div>Black</div><div>Silver</div><div>Leather</div><div>Chronograph</div></div>
+<div class="grid" id="grid"></div>
+<div id="loginBox"><h3>Owner Login</h3><p>PIN Only</p><input type="password" id="pinInput" placeholder="PIN - 4545"><button style="background:#000;color:#ffd700;width:100%" onclick="doLogin()">Login</button></div>
+<div id="ownerPanel"><h3>Owner Panel ✅</h3><input id="pName" placeholder="Watch Name"><input id="pPrice" placeholder="New Price e.g. 4500"><input id="pOld" placeholder="Old Price e.g. 6500"><input id="pImg" placeholder="Photo URL"><button style="background:#000;color:#ffd700;width:100%" onclick="addProduct()">+ Add Watch</button><button onclick="logout()" style="width:100%;margin-top:8px">Logout</button><div id="manage"></div></div>
+<a class="wa" href="https://wa.me/254798428551?text=Hi%20Valiant%20Elegance%2C%20I%20want%20to%20order" target="_blank">💬 WhatsApp Us</a>
+<div class="footer"><h2>VALIANT ELEGANCE</h2><p style="color:#aaa;margin:10px 0">ONLINE SHOP - Delivery to Ngong, Nairobi & Countrywide<br>WhatsApp: +254798428551 • Pay on Delivery / M-Pesa</p><br><a onclick="showLogin()">Owner Login</a></div>
+<script>
+let WA="254798428551";
+let products=JSON.parse(localStorage.getItem('ve2')||'null')||[
+{name:"V20 Gold Luxury",price:4500,old:6500,img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600",desc:"Gold • Luxury"},
+{name:"V21 Black Classic",price:4200,old:6000,img:"https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600",desc:"Black • Classic"},
+{name:"V22 Silver Elite",price:5000,old:7500,img:"https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=600",desc:"Silver • Elite"},
+{name:"V23 Rose Gold",price:4800,old:7000,img:"https://images.unsplash.com/photo-1622434641406-a158123450f9?w=600",desc:"Rose Gold • Premium"},
+{name:"V24 Chronograph",price:5500,old:8000,img:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600",desc:"Sport • Chronograph"},
+{name:"V25 Leather Classic",price:3900,old:5500,img:"https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=600",desc:"Leather • Classic"},
+{name:"V26 Diamond Luxe",price:6500,old:9500,img:"https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=600",desc:"Diamond • Luxe"},
+{name:"V27 Steel Pro",price:4700,old:6800,img:"https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600",desc:"Steel • Pro"}];
+function save(){localStorage.setItem('ve2',JSON.stringify(products))}
+function render(){document.getElementById('grid').innerHTML=products.map((p,i)=>{let off=Math.round((1-p.price/p.old)*100);return `<div class="card"><span class="off">-${off}%</span><img src="${p.img}"><h3>${p.name}</h3><p class="desc">${p.desc}</p><div class="stars">★★★★★ (128)</div><div class="prices"><span class="new">KSh ${p.price.toLocaleString()}</span><span class="old">KSh ${p.old.toLocaleString()}</span></div><button class="btn" onclick="order('${p.name}')">Order on WhatsApp</button></div>`}).join('');document.getElementById('manage').innerHTML=products.map((p,i)=>`<p>${p.name} <button onclick="del(${i})">Delete</button></p>`).join('')}
+function order(n){window.open('https://wa.me/'+WA+'?text='+encodeURIComponent('Hi Valiant Elegance, I want '+n+' on Daily Deal'),' _blank')}
+function showLogin(){document.getElementById('loginBox').style.display='block';window.scrollTo(0,document.body.scrollHeight)}
+function doLogin(){if(document.getElementById('pinInput').value==='4545'){document.getElementById('ownerPanel').style.display='block';document.getElementById('loginBox').style.display='none';render();alert('Welcome Owner!')}else alert('Wrong PIN - 4545')}
+function logout(){document.getElementById('ownerPanel').style.display='none'}
+function addProduct(){let n=document.getElementById('pName').value,p=+document.getElementById('pPrice').value,o=+document.getElementById('pOld').value||p*1.4,im=document.getElementById('pImg').value||'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600';if(!n||!p)return alert('Name + Price');products.push({name:n,price:p,old:o,img:im,desc:'New • Daily Deal'});save();render()}
+function del(i){products.splice(i,1);save();render()}
+let s=7*3600+59*60+32;setInterval(()=>{s--;let h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;document.getElementById('count').innerText=`⏰ Ends in ${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(sec).padStart(2,'0')}`},1000);
+render();
+</script></body></html>
